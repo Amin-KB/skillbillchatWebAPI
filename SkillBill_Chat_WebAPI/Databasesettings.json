@@ -1,0 +1,6 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=SERVERNAME;Initial Catalog=SkillBill;Persist Security Info=True;User ID=sa;Password=*******"
+  }
+  
+}
