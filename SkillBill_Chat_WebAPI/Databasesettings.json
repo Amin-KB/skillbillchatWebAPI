@@ -1,6 +1,6 @@
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Data Source=SERVERNAME;Initial Catalog=SkillBill;Persist Security Info=True;User ID=sa;Password=*******"
+    "DefaultConnection": "Data Source=AMIN-PC\\SQLEXPRESS;Initial Catalog=SkillBill;Persist Security Info=True;User ID=sa;Password=33509110Karaj;"
   }
   
 }

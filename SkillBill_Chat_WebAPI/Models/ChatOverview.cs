@@ -2,7 +2,7 @@
 
 namespace ASPnet_Core_Web_API.Model
 {
-    public class ChatOverview
+    public record ChatOverview
     {
 
         // ID_GROUP	GROUPNAME	MessTotal	MessUnread	LastMsgDate	LastMsgUser	LastMsgText	InfoMsg

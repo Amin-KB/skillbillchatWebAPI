@@ -21,14 +21,53 @@ GO
 -- Returns the all Messages in a group chat
 --        
 -- ---------------------------------------------------------------------
--- 2022-11-25: 
-CREATE OR ALTER FUNCTION dbo.fn_GetAllMsgsInGroup(@groupId INT)
-RETURNS TABLE
+-- 2022-11-25:
+drop FUNCTION dbo.fn_GetAllMsgsInGroupbyId
+CREATE OR ALTER FUNCTION dbo.fn_GetAllMsgsInGroupbyId(@groupId INT)
+RETURNS @MeassageInGroup TABLE
+(
+    GroupId  INT,groupName NVARCHAR(30),
+	UserId INT,MessTyp INT,MessDate SMALLDATETIME,
+	MessText NVARCHAR(max),Appendix NVARCHAR(30)
+)
   AS
-   RETURN(SELECT * FROM ChatMess
-    WHERE GroupId=@groupId)
+     BEGIN 
+      INSERT INTO @MeassageInGroup SELECT gr.Id,gr.GroupName,cm.UserId,
+                  cm.MessTyp,cm.MessDate, cm.MessText,cm.Appendix
+                  FROM Groups gr
+                  JOIN ChatMess cm ON gr.Id=cm.GroupId
+	              WHERE gr.Id= @groupId
+      RETURN    
+	 END
+GO
+
+
+-- ---------------------------------------------------------------------
+-- Author: Amin Karam Beigi
+-- Returns GroupId groupName UserId MessTyp MessDate MessText Appendix
+-- By searching with Groupname       
+-- ---------------------------------------------------------------------
+-- 2022-11-26: 
+
+CREATE OR ALTER FUNCTION dbo.fn_GetAllMsgsInGroupByGroupName(@groupName NVARCHAR(30))
+RETURNS @MeassageInGroup TABLE
+(
+    GroupId  INT,groupName NVARCHAR(30),
+	UserId INT,MessTyp INT,MessDate SMALLDATETIME,
+	MessText NVARCHAR(max),Appendix NVARCHAR(30)
+)
+  AS
+     BEGIN 
+      INSERT INTO @MeassageInGroup SELECT gr.Id,gr.GroupName,cm.UserId,
+                  cm.MessTyp,cm.MessDate, cm.MessText,cm.Appendix
+                  FROM Groups gr
+                  JOIN ChatMess cm ON gr.Id=cm.GroupId
+	              WHERE gr.GroupName= @groupName
+      RETURN    
+	 END
 
 GO
+
 
 
 -- ---------------------------------------------------------------------
@@ -63,7 +102,7 @@ RETURNS @user TABLE
 
 
 CREATE OR ALTER FUNCTION [dbo].[ChatGroupOverview] 
-( @UserId int, @UserLastVisit datetime = NULL)
+( @UserId int, @UserLastVisit SMALLDATETIME = NULL)
 RETURNS @ChatGroups TABLE 
 (
 	ID_GROUP int NOT NULL, GROUPNAME nvarchar(50)

@@ -1,6 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ASPnet_Core_Web_API.Model;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SkillBill_Chat_WebAPI.Models.Requests;
 using SkillBill_Chat_WebAPI.Services;
+using System.Diagnostics;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using Newtonsoft.Json;
+using System.Security.Principal;
+using SkillBill_Chat_WebAPI.Extentions;
 
 namespace SkillBill_Chat_WebAPI.Controllers
 {
@@ -8,23 +16,24 @@ namespace SkillBill_Chat_WebAPI.Controllers
     [ApiController]
     public class ChatOverviewController : ControllerBase
     {
-        IChatOverviewService _chatOverviewService;
+       
         public SqlClientService _sqlClientService;
-        public ChatOverviewController(ISqlClientService sqlClientService, IChatOverviewService chatOverviewService)
+        public ChatOverviewController(ISqlClientService sqlClientService)
         {
             _sqlClientService = (SqlClientService?)sqlClientService;
-            _chatOverviewService = chatOverviewService;
+            
         }
-        [HttpGet]
-        [Route("testing")]
-        public ActionResult GetChatOverviewByIdAndDate(int id, DateTime userLastVisitDate)
-        {
-            var chatOverview = _sqlClientService.FromDatabase(id, userLastVisitDate);
+        [HttpPost]
+        [Route("getChatOverviewByIdAndDate")]
+        public ActionResult GetChatOverviewByIdAndDate(ChatOverviewRequest chatOverviewRequest)
+        {           
+            var chatOverview = chatOverviewRequest.SafeRequest().FromDatabase();
             if (chatOverview == null)
                 return NotFound();
-            var chatOverviewDTO = _chatOverviewService.ToChatOverviewDTO(chatOverview);
+            var chatOverviewDTO = chatOverview.ToDTO();
 
             return Ok(chatOverviewDTO);
         }
+        
     }
 }

@@ -1,5 +1,7 @@
 ﻿using ASPnet_Core_Web_API.Model;
+using Newtonsoft.Json;
 using SkillBill_Chat_WebAPI.Models.DTOs;
+using SkillBill_Chat_WebAPI.Models.Requests;
 using System.Text.RegularExpressions;
 
 namespace SkillBill_Chat_WebAPI.Extentions
@@ -7,30 +9,7 @@ namespace SkillBill_Chat_WebAPI.Extentions
     public static class Extention
     {
 
-        public static ChatMessage ToChatMessage(ChatMessageDTO chatMessageDTO)
-        {
-            return  new ChatMessage()
-            {
-                Id= chatMessageDTO.Id,
-                GroupId= chatMessageDTO.GroupId,
-                UserId= chatMessageDTO.UserId,
-                MsgDate= chatMessageDTO.MsgDate,
-                MsgText= chatMessageDTO.MsgText,
-                Appendix= chatMessageDTO.Appendix,
-            };
-        }
-        public static ChatMessageDTO ToChatMessageDTO(ChatMessage chatMessage)
-        {
-            return new ChatMessageDTO()
-            {
-                Id = chatMessage.Id,
-                GroupId = chatMessage.GroupId,
-                UserId = chatMessage.UserId,
-                MsgDate = chatMessage.MsgDate,
-                MsgText = chatMessage.MsgText,
-                Appendix = chatMessage.Appendix,
-            };
-        }
+     
  
 
         public static string GetRootPath(string rootFilename)
@@ -51,7 +30,9 @@ namespace SkillBill_Chat_WebAPI.Extentions
 
             return config;
 
+
         }
+  
 
     }
 }
