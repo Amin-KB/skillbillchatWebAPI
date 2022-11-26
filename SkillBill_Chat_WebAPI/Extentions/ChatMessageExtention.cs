@@ -11,6 +11,12 @@ namespace SkillBill_Chat_WebAPI.Extentions
     public static class ChatMessageExtention
     {
         static string connectionString => SqlClientService.GetConnectionstring;
+
+        /// <summary>
+        /// This Method saves a message  in ChatMess Table and returns 1 if it is successful and 0 if it is not
+        /// </summary>
+        /// <param name="chatMessage"></param>
+        /// <returns>int</returns>
         public static int SaveInDataBase(this ChatMessage chatMessage)
         {
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
@@ -34,12 +40,18 @@ namespace SkillBill_Chat_WebAPI.Extentions
         /// This Extention method helps to avoid this error: "the json value could not be converted to system.datetime"
         /// </summary>
         /// <param name="chatOverviewRequest"></param>
-        /// <returns></returns>
+        /// <returns>ChatMessage</returns>
         public static ChatMessage SafeRequest(this ChatMessage chatMessageRequest)
         {
             var chatMessageRequeststr = JsonConvert.SerializeObject(chatMessageRequest);
             return JsonConvert.DeserializeObject<ChatMessage>(chatMessageRequeststr);
         }
+
+        /// <summary>
+        /// This Method mapps ChatMessageDTO to ChatMessage
+        /// </summary>
+        /// <param name="chatMessageDTO"></param>
+        /// <returns>ChatMessage</returns>
         public static ChatMessage ToChatMessage(this ChatMessageDTO chatMessageDTO)
         {
             return new ChatMessage()
@@ -52,6 +64,11 @@ namespace SkillBill_Chat_WebAPI.Extentions
                 Appendix = chatMessageDTO.Appendix,
             };
         }
+        /// <summary>
+        /// This Method mapps ChatMessage to ChatMessageDTO
+        /// </summary>
+        /// <param name="chatMessage"></param>
+        /// <returns>ChatMessageDTO</returns>
         public static ChatMessageDTO ToChatMessageDTO(this ChatMessage chatMessage)
         {
             return new ChatMessageDTO()

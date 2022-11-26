@@ -15,7 +15,7 @@ namespace SkillBill_Chat_WebAPI.Extentions
         /// This Extention method mapps ChatOverview to Data Transfer Object
         /// </summary>
         /// <param name="chatOverview"></param>
-        /// <returns></returns>
+        /// <returns>ChatOverviewDTO</returns>
         public static ChatOverviewDTO ToDTO(this ChatOverview? chatOverview)
         {
             return new ChatOverviewDTO()
@@ -40,8 +40,12 @@ namespace SkillBill_Chat_WebAPI.Extentions
             var chatOverviewRequeststr = JsonConvert.SerializeObject(chatOverviewRequest);
             return JsonConvert.DeserializeObject<ChatOverviewRequest>(chatOverviewRequeststr);
         }
-
-        public static ChatOverview FromDatabase(this ChatOverviewRequest chatOverviewRequest)
+        /// <summary>
+        /// This Method gets all the Chat information base on the last visit from database
+        /// </summary>
+        /// <param name="chatOverviewRequest"></param>
+        /// <returns>ChatOverview</returns>
+        public static ChatOverview GetChatGroupOrview(this ChatOverviewRequest chatOverviewRequest)
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {

@@ -151,3 +151,30 @@ BEGIN
 
 END
 GO
+
+ -- ---------------------------------------------------------------------
+-- Author: AMIN KARAM BEIGI
+-- returns User, Chats, total/unread Messages
+--         , last Message: Date, User, Text
+-- ---------------------------------------------------------------------
+-- 2022-11-26: 
+
+CREATE OR ALTER FUNCTION fn_GetAllMessagesOfAUser(@username NVARCHAR(256))
+RETURNS @messages TABLE
+(
+    UserId INT,UserName NVARCHAR(256),GroupId INT,MessageId INT,MessDate SMALLDATETIME,MessText NVARCHAR(max),MessTyp INT,
+	Appendix NVARCHAR(30)
+)
+   AS
+    BEGIN
+	  INSERT INTO @messages SELECT
+	  us.Id,us.UserName,cm.GroupId,cm.Id,cm.MessDate,cm.MessText,cm.MessTyp,cm.Appendix FROM AspNetUsers us
+	  JOIN ChatMess cm ON us.Id=cm.UserId
+	  WHERE us.UserName=@username
+	  RETURN
+	  END
+	    
+select * from dbo.fn_GetAllMessagesOfAUser('TR1.TR1@qualifizierung.at')
+select * from dbo.fn_GetAllMessagesOfAUser('ITN234567@qualifizierung.at')
+select * from dbo.fn_GetAllMessagesOfAUser('ITN333581@qualifizierung.at')
+select * from dbo.fn_GetAllMessagesOfAUser('TESTPM.TESTPM@QUALIFIZIERUNG.AT')
