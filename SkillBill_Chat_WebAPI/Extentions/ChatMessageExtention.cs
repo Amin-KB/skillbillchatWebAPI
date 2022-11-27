@@ -5,6 +5,8 @@ using System.Data.SqlClient;
 using System.Data;
 using Newtonsoft.Json;
 using SkillBill_Chat_WebAPI.Models.DTOs;
+using SkillBill_Chat_WebAPI.Models;
+using System.Text.RegularExpressions;
 
 namespace SkillBill_Chat_WebAPI.Extentions
 {
@@ -80,6 +82,10 @@ namespace SkillBill_Chat_WebAPI.Extentions
                 MsgText = chatMessage.MsgText,
                 Appendix = chatMessage.Appendix,
             };
+        }
+        public static string ToString(this ChatMessage chatMessage)
+        {
+            return chatMessage.Id + "/" + chatMessage.GroupId + "/" + chatMessage.UserId + ", Msg Typ/Date/Txt " + chatMessage.MsgType + "/" + chatMessage.MsgDate + "/" + chatMessage.MsgText;
         }
 
     }

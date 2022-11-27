@@ -3,7 +3,7 @@ GO
 -- ---------------------------------------------------------------------
 -- Author: Amin Karam Beigi
 -- Save Message info
---        
+--  Web API: Done      
 -- ---------------------------------------------------------------------
 -- 2022-11-25: 
 
@@ -19,7 +19,8 @@ GO
 -- ---------------------------------------------------------------------
 -- Author: Amin Karam Beigi
 -- Returns the all Messages in a group chat
---        
+-- By searching GroupId
+-- Web API:          
 -- ---------------------------------------------------------------------
 -- 2022-11-25:
 drop FUNCTION dbo.fn_GetAllMsgsInGroupbyId
@@ -45,7 +46,8 @@ GO
 -- ---------------------------------------------------------------------
 -- Author: Amin Karam Beigi
 -- Returns GroupId groupName UserId MessTyp MessDate MessText Appendix
--- By searching with Groupname       
+-- By searching with Groupname  
+-- Web API: Done  
 -- ---------------------------------------------------------------------
 -- 2022-11-26: 
 
@@ -72,8 +74,9 @@ GO
 
 -- ---------------------------------------------------------------------
 -- Author: Amin Karam Beigi
--- Returns UserId FirstName LastName UserName Email PhoneNumber
---   GroupId GroupName    
+-- Returns UserId FirstName LastName UserName Email PhoneNumber GroupId GroupName 
+-- By Searching GroupName  
+-- Web API: Done  
 -- ---------------------------------------------------------------------
 -- 2022-11-25: 
 CREATE OR ALTER FUNCTION fn_GetUsersInGroup (@groupName NVARCHAR(30))
@@ -95,8 +98,9 @@ RETURNS @user TABLE
 
    -- ---------------------------------------------------------------------
 -- Author: 
--- returns User, Chats, total/unread Messages
---         , last Message: Date, User, Text
+-- returns User, Chats, total/unread Messages  , last Message: Date, User, Text
+-- By searching UserId and UserLastVisit       
+-- Web API: Done 
 -- ---------------------------------------------------------------------
 -- 2022-11-21: 
 
@@ -154,8 +158,9 @@ GO
 
  -- ---------------------------------------------------------------------
 -- Author: AMIN KARAM BEIGI
--- returns User, Chats, total/unread Messages
---         , last Message: Date, User, Text
+-- returns User, Chats, total/unread Messages last Message: Date, User, Text
+-- By searching Username      
+-- Web API: Done
 -- ---------------------------------------------------------------------
 -- 2022-11-26: 
 
@@ -173,8 +178,42 @@ RETURNS @messages TABLE
 	  WHERE us.UserName=@username
 	  RETURN
 	  END
-	    
-select * from dbo.fn_GetAllMessagesOfAUser('TR1.TR1@qualifizierung.at')
-select * from dbo.fn_GetAllMessagesOfAUser('ITN234567@qualifizierung.at')
-select * from dbo.fn_GetAllMessagesOfAUser('ITN333581@qualifizierung.at')
-select * from dbo.fn_GetAllMessagesOfAUser('TESTPM.TESTPM@QUALIFIZIERUNG.AT')
+
+
+	  GO
+
+
+CREATE OR ALTER FUNCTION fn_Athenticate(@email NVARCHAR(256),@password NVARCHAR(MAX))  
+RETURNS @user TABLE(
+ UserId INT,FirstName NVARCHAR(50),
+  LastName NVARCHAR(50),UserName NVARCHAR(50),
+  Email NVARCHAR(50),Role INT
+)
+AS
+    BEGIN
+	  INSERT INTO @user SELECT asu.Id,asu.FirstName,asu.LastName,
+	  asu.UserName,asu.Email,aspur.RoleId FROM AspNetUsers asu
+	  JOIN AspNetUserRoles aspur ON asu.Id=aspur.UserId
+	  WHERE asu.Email = @email AND asu.PasswordHash=@password
+     RETURN
+
+  END
+GO
+
+CREATE OR ALTER PROCEDURE pr_SaveInAspNetUserToken @userId INT, @LoginProvider NVARCHAR(112),@name NVARCHAR(112),@value NVARCHAR(MAX) 
+ AS 
+   BEGIN
+   INSERT INTO AspNetUserTokens VALUES(@userId,@LoginProvider,@name,@value)
+   END
+
+   
+   GO
+
+
+
+
+   CREATE OR ALTER PROCEDURE pr_SaveInAspNetRoleClaims @id INT,@userId INT, @claimType NVARCHAR(256),@claimValue NVARCHAR(256)
+ AS 
+   BEGIN
+   INSERT INTO AspNetRoleClaims VALUES(@id,@userId, @claimType,@claimValue)
+   END

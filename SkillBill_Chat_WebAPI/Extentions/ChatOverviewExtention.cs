@@ -5,6 +5,7 @@ using SkillBill_Chat_WebAPI.Models.Requests;
 using System.Data.SqlClient;
 using System.Data;
 using SkillBill_Chat_WebAPI.Services;
+using System.Security.Cryptography;
 
 namespace SkillBill_Chat_WebAPI.Extentions
 {
@@ -20,7 +21,7 @@ namespace SkillBill_Chat_WebAPI.Extentions
         {
             return new ChatOverviewDTO()
             {
-                ID_GROUP = chatOverview.ID_GROUP,
+                ID_GROUP = chatOverview.GroupId,
                 GroupName = chatOverview.GroupName,
                 MessTotal = chatOverview.MessTotal,
                 MessUnread = chatOverview.MessUnread,
@@ -63,12 +64,23 @@ namespace SkillBill_Chat_WebAPI.Extentions
         {
             if (sqlDataReader.Read())
             {
-                var ChatOverview = new ChatOverview(Convert.ToInt32(sqlDataReader["ID_GROUP"]), sqlDataReader["GROUPNAME"].ToString(),
-                    Convert.ToInt32(sqlDataReader["MessTotal"]), Convert.ToInt32(sqlDataReader["MessUnread"]),Convert.ToDateTime( sqlDataReader["LastMsgDate"]),
-                    sqlDataReader["LastMsgUser"].ToString(), sqlDataReader["LastMsgText"].ToString());
-                return ChatOverview;
+                return new ChatOverview()
+                {
+                    GroupId = int.Parse((string)sqlDataReader["ID_GROUP"]),
+                    GroupName = sqlDataReader["GROUPNAME"].ToString(),
+                    MessTotal= Convert.ToInt32(sqlDataReader["MessTotal"]),
+                    MessUnread = Convert.ToInt32(sqlDataReader["MessUnread"]),
+                    LastMsgDate = Convert.ToDateTime(sqlDataReader["LastMsgDate"]),
+                    LastMsgUser = sqlDataReader["LastMsgUser"].ToString(),
+                    LastMsgText = sqlDataReader["LastMsgText"].ToString()
+                };
             }
             return null;
+        }
+        public static string ToString( this ChatOverview chatOverview)
+        {
+            return chatOverview.GroupId + "/" + chatOverview.GroupName + ", Msg Tot/unread " + chatOverview.MessTotal + "/" + chatOverview.MessUnread
+                   + ", Last " + chatOverview.LastMsgUser + "/" + chatOverview.LastMsgText;
         }
     }
 }
